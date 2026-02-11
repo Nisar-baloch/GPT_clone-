@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-white flex h-screen overflow-hidden">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar" class="w-64 bg-slate-900 border-r border-slate-700 flex flex-col transition-all duration-300">
+    <div class="flex items-center justify-between p-4 border-b border-slate-700">
+      <span class="font-bold">Chats</span>
+      <button onclick="toggleSidebar()">☰</button>
+    </div>
+
+    <button onclick="newChat()" class="m-3 bg-blue-600 hover:bg-blue-700 p-2 rounded-lg">+ New Chat</button>
+
+    <div id="chatList" class="flex-1 overflow-y-auto p-2 space-y-2"></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="flex-1 flex flex-col">
+
+    <!-- CHAT AREA -->
+    <div id="chatBox" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+
+    <!-- INPUT AREA -->
+    <div class="p-4 bg-slate-900 border-t border-slate-700 flex items-center gap-2 relative">
+
+      <!-- TOOLS BUTTON -->
+      <button onclick="toggleMenu()" class="p-2 hover:bg-slate-700 rounded-lg">➕</button>
+
+      <!-- TOOL MENU -->
+      <div id="toolMenu" class="hidden absolute bottom-16 left-4 bg-slate-800 border border-slate-600 rounded-lg shadow-lg w-44">
+        <div onclick="openFolder()" class="p-2 hover:bg-slate-700 cursor-pointer">📁 Open Folder</div>
+        <div onclick="openFile()" class="p-2 hover:bg-slate-700 cursor-pointer">📝 Open File</div>
+      </div>
+
+      <!-- HIDDEN INPUTS FOR FILE PICKER -->
+      <input type="file" id="folderInput" webkitdirectory directory hidden />
+      <input type="file" id="fileInput" hidden />
+
+      <!-- MESSAGE INPUT -->
+      <input id="userInput" type="text" placeholder="Message AI..."
+        class="flex-1 p-3 rounded-lg bg-slate-800 outline-none"/>
+
+      <!-- MIC -->
+      <button onclick="startListening()" class="p-2 hover:bg-slate-700 rounded-lg">🎤</button>
+
+      <!-- SEND -->
+      <button onclick="sendMessage()" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg">➤</button>
+    </div>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
