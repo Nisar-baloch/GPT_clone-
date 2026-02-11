@@ -1,6 +1,17 @@
-const ApiKey = "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";
 let messages = [];
 let firstMessage = true;
+
+// Load chat from localStorage
+const saved = localStorage.getItem("chat_messages");
+if (saved) {
+  messages = JSON.parse(saved);
+  messages.forEach(m => addMessage(m.role, m.content));
+  firstMessage = messages.length === 0;
+}
+
+function saveMessages() {
+  localStorage.setItem("chat_messages", JSON.stringify(messages));
+}
 
 function toggleSidebar() {
   const sidebar = document.getElementById("sidebar");
@@ -24,9 +35,8 @@ function newChat() {
   document.getElementById("chatBox").innerHTML = "";
   messages = [];
   firstMessage = true;
+  localStorage.removeItem("chat_messages");
 }
-
-
 
 function addMessage(role, text) {
   const chatBox = document.getElementById("chatBox");
@@ -65,6 +75,8 @@ function sendMessage() {
 
   addMessage("user", text);
   messages.push({ role: "user", content: text });
+  saveMessages();
+
   input.value = "";
 
   if (firstMessage) {
@@ -74,22 +86,23 @@ function sendMessage() {
 
   showTyping();
 
-  fetch("https://openrouter.ai/api/v1/chat/completions", {
+  fetch("/api/chat/", {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${ApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "openrouter/free",
-      messages: messages,
-    }),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ messages: messages })
   })
-  .then(res => res.json())
+  .then(res => {
+    if (!res.ok) throw new Error("Server error: " + res.status);
+    return res.json();
+  })
   .then(data => {
-    const reply = data.choices[0].message.content;
     document.getElementById("chatBox").lastChild.remove();
+    const reply = data.choices?.[0]?.message?.content || "No response.";
     typeEffect(reply);
+  })
+  .catch(err => {
+    document.getElementById("chatBox").lastChild.remove();
+    addMessage("assistant", "⚠️ " + err.message);
   });
 }
 
@@ -111,6 +124,7 @@ function typeEffect(text) {
       setTimeout(typing, 15);
     } else {
       messages.push({ role: "assistant", content: text });
+      saveMessages();
       speakText(text);
     }
   }
