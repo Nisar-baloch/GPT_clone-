@@ -1,0 +1,35 @@
+.message-bubble {
+  max-width: 70%;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.message-bubble.user {
+  max-width: 70%;
+}
+
+.message-bubble.assistant {
+  max-width: 75%;
+}
+
+@media (max-width: 768px) {
+  .message-bubble {
+    max-width: 85%;
+  }
+  
+  .message-bubble.user {
+    max-width: 85%;
+  }
+  
+  .message-bubble.assistant {
+    max-width: 90%;
+  }
+}
+
+.message-text {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.6;
+}
